@@ -1,0 +1,19 @@
+
+
+<div className="summaryWrapper">
+    {/* <button onClick={getCompleteInsights}> */}
+    <div className="complete">
+        Complete Sum : {totalSum}
+    </div>
+    {/* </button> */}
+    <div className="filtered">
+        <button onClick={getFilteredInsights}>
+            Filtered Sum : {filteredSum}
+        </button>
+    </div>
+    <div className="selected">
+        {selectedRowsLength > 0 && <button onClick={getSelectedRowInsights}>
+            Selected Sum : {selectedSum}
+        </button>}
+    </div>
+</div>

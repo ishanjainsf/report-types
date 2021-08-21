@@ -1,0 +1,246 @@
+{
+    "colData" : [
+        {
+            "field" : "bId",
+            "headerName" : "Booking Id",
+            "width" : 150
+        },
+        {
+            "field" : "cName",
+            "headerName" : "Customer Name",
+            "width" : 170 
+        },
+        {
+            "field" : "cEmail",
+            "headerName" : "Customer Email",
+            "width" : 150 
+        },
+        {
+            "field" : "cIn",
+            "headerName" : "Check In",
+            "width" : 150 
+        },
+        {
+            "field" : "cOut",
+            "headerName" : "Check Out",
+            "width" : 150 
+        },
+        {
+            "field" : "src",
+            "headerName" : "Source",
+            "width" : 150 
+        },
+        {
+            "field" : "cId",
+            "headerName" : "Customer Identification / GST",
+            "width" : 150 
+        },
+        {
+            "field" : "bStatus",
+            "headerName" : "Booking Status",
+            "width" : 150 
+        },
+        {
+            "field" : "rooms",
+            "headerName" : "Rooms",
+            "width" : 150 
+        },
+        {
+            "field" : "rTypes",
+            "headerName" : "Room Types",
+            "width" : 150 
+        },
+        {
+            "field" : "tAmount",
+            "headerName" : "Total Amount",
+            "width" : 150,
+            "type" : "number"
+        },
+        {
+            "field" : "payMade",
+            "headerName" : "Payment Made",
+            "width" : 150 
+        }
+    ],
+    "rowData" : [
+        {
+            "id" : 1,
+            "bId" : "SPF_001",
+            "cName" : "Ishan Jain",
+            "cEmail" : "ishan@gmail.com",
+            "cIn" : "04/08/2021",
+            "cOut" : "10/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Triple Room",
+            "tAmount" : 5999,
+            "payMade" : 5999
+        },
+        {
+            "id" : 2,
+            "bId" : "SPF_002",
+            "cName" : "Preetham Shetty",
+            "cEmail" : "preetham@gmail.com",
+            "cIn" : "02/07/2021",
+            "cOut" : "08/07/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Single Room",
+            "tAmount" : 7999,
+            "payMade" : 7999
+        },
+        {
+            "id" : 3,
+            "bId" : "SPF_003",
+            "cName" : "Sasank",
+            "cEmail" : "sasank@gmail.com",
+            "cIn" : "01/08/2021",
+            "cOut" : "07/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Pending",
+            "rooms" : "1",
+            "rTypes" : "Triple Room",
+            "tAmount" : 12999,
+            "payMade" : 12999
+        },
+        {
+            "id" : 4,
+            "bId" : "SPF_004",
+            "cName" : "Asif Khan",
+            "cEmail" : "asif@gmail.com",
+            "cIn" : "31/07/2021",
+            "cOut" : "06/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Single Room",
+            "tAmount" : 10999,
+            "payMade" : 7999
+        },
+        {
+            "id" : 5,
+            "bId" : "SPF_005",
+            "cName" : "Mayank",
+            "cEmail" : "mayank@gmail.com",
+            "cIn" : "30/07/2021",
+            "cOut" : "05/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Triple Room",
+            "tAmount" : 3999,
+            "payMade": 3999
+        },
+        {
+            "id" : 6,
+            "bId" : "SPF_006",
+            "cName" : "Venkat",
+            "cEmail" : "venkat@gmail.com",
+            "cIn" : "30/07/2021",
+            "cOut" : "05/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Pending",
+            "rooms" : "1",
+            "rTypes" : "Single Room",
+            "tAmount" : 3999
+        },
+        {
+            "id" : 7,
+            "bId" : "SPF_007",
+            "cName" : "sanya",
+            "cEmail" : "sanya@gmail.com",
+            "cIn" : "21/07/2021",
+            "cOut" : "25/07/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Double Room",
+            "tAmount" : 5999,
+            "payMade" : 5999
+        },
+        {
+            "id" : 8,
+            "bId" : "SPF_008",
+            "cName" : "shaurya",
+            "cEmail" : "shaurya@gmail.com",
+            "cIn" : "10/07/2021",
+            "cOut" : "15/07/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Double Room",
+            "tAmount" : 10099,
+            "payMade" : 10099
+        },
+        {
+            "id" : 9,
+            "bId" : "SPF_009",
+            "cName" : "Sakshi",
+            "cEmail" : "sakshi@gmail.com",
+            "cIn" : "10/08/2021",
+            "cOut" : "20/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Triple Room",
+            "tAmount" : 1999,
+            "payMade" : 1999
+        },
+        {
+            "id" : 10,
+            "bId" : "SPF_010",
+            "cName" : "Anirudh",
+            "cEmail" : "anirudh@gmail.com",
+            "cIn" : "20/09/2021",
+            "cOut" : "25/09/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Single Room",
+            "tAmount" : 12999,
+            "payMade" : 12999
+        },
+        {
+            "id" :11,
+            "bId" : "SPF_011",
+            "cName" : "Rupali",
+            "cEmail" : "rupali@gmail.com",
+            "cIn" : "27/07/2021",
+            "cOut" : "31/07/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Triple Room",
+            "tAmount" : 7999,
+            "payMade" : 7999
+        },
+        {
+            "id" : 12,
+            "bId" : "SPF_012",
+            "cName" : "Prema",
+            "cEmail" : "prema@gmail.com",
+            "cIn" : "30/07/2021",
+            "cOut" : "05/08/2021",
+            "src" : "Wall-in booking",
+            "cId" : "",
+            "bStatus" : "Confirmed",
+            "rooms" : "1",
+            "rTypes" : "Triple Room",
+            "tAmount" : 3999,
+            "payMade" : 3999
+        }
+    ]
+}

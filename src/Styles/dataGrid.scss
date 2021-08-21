@@ -1,0 +1,42 @@
+.agGridWrapper{
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    font-size: 25px;
+    font-family: var(--poppins);
+    color: black;
+    text-align: center;
+    font-weight: black;
+    justify-content: center;
+    align-items: center;
+    .agGridTableWrapper{
+        margin-top: 45px;
+        font-size: 25px;
+        height: 500px;
+        width: 100%;
+        border: none;
+        width: 1250px;
+        font-family: var(--poppins);
+        .dataGridTable{
+            font-family: var(--poppins);
+            font-size: 12px;
+            font-weight: medium;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border: none;
+            color: black;
+            // background-color: #fff1f1bd;
+        }
+    }
+}
+.headers{
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.MuiList-root{
+    .MuiDataGrid-gridMenuList{
+        font-family: var(--poppins);
+    }
+}

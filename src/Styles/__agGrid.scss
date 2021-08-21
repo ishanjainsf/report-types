@@ -1,0 +1,234 @@
+@import "~ag-grid-community/src/styles/ag-grid.scss";
+@import "~ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin";
+
+.agGridWrapr{
+    margin-top: 25px;
+    font-family: var(--poppins);
+    font-size: 25px;
+    text-align: center;
+    .agGridTableWrapper{
+        margin-top: 25px;
+        font-size: 15px;
+        .headerOptions{
+            margin-bottom: 35px;
+            cursor: pointer;
+            align-self: left;
+            display: flex;
+            flex-direction: row;
+            margin-left: 35px;
+            // .exportBtn{
+            //     margin-left: 15px;
+            //     background-color: white;
+            //     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            //     border-radius: 8px;
+            //     border: none;
+            //     width: 45px;
+            //     height: 35px;
+            //     font-family: var(--poppins);
+            //     cursor: pointer;
+            //     padding-top: 7px;
+            // }
+            .paginationWrapper{
+                margin-left: 15px;
+                .paginationSelection{
+                    width: 65px;
+                    height: 35px;
+                    color: black;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    background-color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 3px;
+                    font-family: var(--poppins);
+                }
+            }
+            .columnVisibilityWrapper{
+                margin-left: 15px;
+                text-align: center;
+                .columnSelector{
+                    width: 75px;
+                    height: 35px;
+                    color: black;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    background-color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 3px;
+                    font-family: var(--poppins);
+                }
+            }
+            .searchFunctionality{
+                .searchInp{
+                    width: 145px;
+                    height: 35px;
+                    color: black;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    background-color: white;
+                    padding: 15px;
+                    border: none;
+                    border-radius: 8px;
+                    font-family: var(--poppins); 
+                }
+            }
+            .datePickerWrapper{
+                display: flex;
+                z-index: 1;
+                flex-direction: column;
+                align-items: center;
+                background-color: white;
+                margin-left: 15px;
+                .startEndDate{
+                    align-items: center;
+                    display: flex;
+                    flex-direction: row;
+                    background-color: white;
+                    color: black;
+                    box-shadow: #0000003d 0px 3px 8px;
+                    max-width: 250px;
+                    height: 35px;
+                    border-radius: 8px;
+                    padding: 15px;
+                    font-size: 12px;
+                    .hyphen{
+                        margin-left: 15px;
+                    }
+                    .endDate{
+                        margin-left: 15px;
+                    }
+                }
+                .dateRangePicker{
+                    position: absolute;
+                    margin-top: 55px;
+                    border: none;
+                    border-radius: 8px;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    background-color: white;
+                    padding: 15px;
+                    .setDateWrapper{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        margin-top: 25px;
+                        margin-bottom: 25px;
+                        .setDateBtn{
+                            font-family: var(--poppins);
+                            background-color: rgb(61, 145, 255);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            height: 35px;
+                            width: 100px;
+                            font-size: 12px;
+                            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                        }
+                        .closeBtn{
+                            margin-left: 25px;
+                            font-family: var(--poppins);
+                            background-color: rgb(230, 43, 43);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            height: 35px;
+                            width: 100px;
+                            font-size: 12px;
+                            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                        }
+                    }
+                }
+            }
+            .dateFilterType{
+                margin-left: 15px;
+                .dateFilterWrapper{
+                    align-items: center;
+                    display: flex;
+                    flex-direction: row;
+                    background-color: white;
+                    color: black;
+                    box-shadow: #0000003d 0px 3px 8px;
+                    max-width: 250px;
+                    height: 35px;
+                    border-radius: 8px;
+                    padding-left: 5px;
+                    font-size: 13px;
+                    border: none;
+                }
+            }
+            .exportWrapper{
+                margin-left: 15px;
+                .exportOptionsWrapper{
+                    height: 35px;
+                    width: 150px;
+                    border: none;
+                    border-radius: 8px;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    background-color: white;
+                    padding-left: 4.5px;
+                    color: black;
+                    font-family: var(--poppins);
+                    font-size: 13.5px;
+                }
+            }
+        }
+        .agTable{
+            margin-top: 35px;
+            margin-left: 35px;
+            .ag-theme-alpine{
+                // margin-left: 35px;
+                padding: 25px;
+                width: 95%;
+                height: 450px;
+                text-align: left;
+                font-family: var(--poppins);
+                position: absolute;
+                // margin-top: 25px;
+                border-radius: 25px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                @include ag-theme-alpine((
+                    font-family: var(--poppins),
+                    header-height: 20px,
+                    border-radius: 8px,
+                    border-color: white,
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px,
+                    foreground-color: black,
+                ))
+            }
+        }
+        .summaryWrapper{
+            position: relative;
+            margin-top: 52x 0px;
+            margin-bottom: 50px;
+            text-align: left;
+            margin-left: 165px;
+            display: flex;
+            flex-direction: column;
+            .filtered{
+                margin-top: 15px;
+            }
+            .selected{
+                margin-top: 15px;            }
+        }
+    }
+    .pdfExportWrapper{
+        font-size: 14px;
+        margin-top: 550px;
+        margin-bottom: 25px; 
+        font-size: var(--poppins);   
+    }
+}
+
+.customModal{
+    border: none;
+    border-radius: 8px;
+    min-width: 350px;
+    padding: 15px;
+    font-family: var(--poppins);
+}
+
+.ifConfirmed{
+    background-color: green;
+    color: white;
+}
+.notConfirmed{
+    background-color: red;
+    color: white;
+}
