@@ -20,7 +20,7 @@ import CustomPinnedRowRenderer from "./customPinnedRowRenderer";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 
-function CounterReport() {
+function POSDetailReport() {
 
     // defining variables and setting the state
     const [gridApi, setGridApi] = useState(null);
@@ -33,53 +33,48 @@ function CounterReport() {
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
+    const reportType = "POS Detail Report"
 
-    const reportType = "Counter Report"
 
     // filter params for the date filter 
     const filterParams = {
-        debounceMs: 500,
-        suppressAndOrCondition: true,
-        comparator: function(filterLocalDateAtMidnight, cellValue) {
-          if (cellValue == null) {
-            return 0;
-          }
-        //   console.log(moment(dateParts).format("DD-MM-YYYY"))
-          var dateParts = moment(cellValue).format("DD-MM-YYYY")
-          const formattedDateParts = dateParts.split('-')
-          var year = Number(formattedDateParts[2]);
-          var month = Number(formattedDateParts[1]) - 1;
-          var day = Number(formattedDateParts[0]);
-          var cellDate = new Date(year, month, day);
-
-          if (cellDate < filterLocalDateAtMidnight) {
-            return -1;
-          } else if (cellDate > filterLocalDateAtMidnight) {
-            return 1;
-          } else {
-            return 0;
-          }
-        },
-}
+            debounceMs: 500,
+            suppressAndOrCondition: true,
+            comparator: function(filterLocalDateAtMidnight, cellValue) {
+              if (cellValue == null) {
+                return 0;
+              }
+              var dateParts = cellValue.split(' ');
+              const modifiedDate = dateParts[0] + " " + dateParts[1] + " " + dateParts[2] + " " + dateParts[3]
+              const formattedDate = moment(`${modifiedDate}`).format("DD-MM-YYYY")
+              const formattedDateParts = formattedDate.split('-')
+              var year = Number(formattedDateParts[2]);
+              var month = Number(formattedDateParts[1]) - 1;
+              var day = Number(formattedDateParts[0]);
+              var cellDate = new Date(year, month, day);
+    
+              if (cellDate < filterLocalDateAtMidnight) {
+                return -1;
+              } else if (cellDate > filterLocalDateAtMidnight) {
+                return 1;
+              } else {
+                return 0;
+              }
+            },
+    }
 
     // column definitions
 
     // defining the column headers, etc. 
     const columns = [
-        {field:"service_date", headerName:"Service Date", filter:"agDateColumnFilter", filterParams:filterParams},
-        {field:"booking_id", headerName:"Booking ID"},
-        {field:"service_description", headerName:"Service Description", enableValue: true,},
-        {field:"amount", headerName:"Amount (₹)", aggFunc:"sum", enableValue:true},
-        {field:"cash_refund", headerName:"Refund (₹)", aggFunc:"sum", enableValue:true, valueFormatter : (params) => {return Number(params.value.toFixed(2))} },
-        {field:"customer_name", headerName:"Customer Name"},
-        {field:"service_amount_desc", headerName:"Service Amount Description"},
-
-        {field:"customer_contact", headerName:"Customer Contact", hide:true},
-        {field:"log_timestamp", headerName:"Log Timestamp",  filter:"agDateColumnFilter", filterParams:filterParams, hide:true},
-        {field:"net_amount", headerName:"Net Amount (₹)", aggFunc:"sum", enableValue:true, valueFormatter : (params) => {return Number(params.value.toFixed(2))}, hide:true},
-        {field:"pos_order_id", headerName:"POS Order ID", hide:true},
-        {field:"service_amount_type", headerName:"Service Amount Type", hide:true},
-        {field:"user_email", headerName:"User Email", hide:true}
+        {field:"id", headerName:"Order ID"},
+        {field:"shop_name", headerName:"Shop"},
+        {field:"product_name", headerName:"Product"},
+        {field:"product_qty", headerName:"Quantity"},
+        {field:"product_price", headerName:"Product Price (₹)", valueFormatter : (params) => params.value ? params.value.toFixed(2) : params.value},
+        {field:"order_date", headerName:"Order Date", filter:"agDateColumnFilter", filterParams:filterParams},
+        {field:"order_amount", headerName:"Order Amount (₹)", valueFormatter : (params) => params.value ? params.value.toFixed(2) : params.value },
+        {field:"order_status", headerName:"Order Status"},
     ]
 
     // default column properties
@@ -101,10 +96,11 @@ function CounterReport() {
     const onGridReady = (params) => {
         setGridApi(params.api)
         setGridColumnApi(params.columnApi);
-        // .then((res) => console.log(console.log(res)))
+        // handleDataRequest("https://beta.stayflexi.com/api/v2/reports/getReportData/?hotel_id=12354&report_type=unifiedBookingReport&start_date=2021-01-01&end_date=2021-12-31&date_filter_mode=checkout")
+        // .then((res) => setRowsData(res.report_data))
+        // // .then((res) => console.log(console.log(res)))
         // .then((res) => params.api.applyTransaction({add:res}))
     }
-
 
     // settings the grid Option
     const gridOptions = {
@@ -112,16 +108,14 @@ function CounterReport() {
         // generation of the pinned bottom row data
         onFilterChanged:(params)=>{
             let result = {
-                service_date:"Total",
-                amount:0,
-                cash_refund:0,
-                net_amount:0
+                id:"Total",
+                product_price: 0,
+                order_amount: 0,
             }
             setTimeout(()=>{
                 params.api.forEachNodeAfterFilter(i=>{
-                    result.amount += i.data.amount
-                    result.cash_refund += i.data.cash_refund
-                    result.net_amount += i.data.net_amount
+                    result.order_amount +=i.data.order_amount;
+                    result.product_price +=i.data.product_price;
                 });
                 params.api.setPinnedBottomRowData([result]);
             },0)
@@ -132,26 +126,22 @@ function CounterReport() {
     function updatePinnedRowonDateChange(){
         let result = [
             {
-                service_date:"Total",
-                amount:0,
-                cash_refund:0,
-                net_amount:0
+                id:"Total",
+                product_price:0,
+                order_amount: 0,
             }
         ]
         rowsData.forEach(data => {
-            result[0].amount += data.amount
-            result[0].cash_refund += data.cash_refund
-            result[0].net_amount += data.net_amount
+           result[0].order_amount += data.order_amount;
+           result[0].product_price += data.product_price;
         })
         gridApi.setPinnedBottomRowData(result)
-        console.log(result)
-
     }
     useEffect(() => {
         rowsData && updatePinnedRowonDateChange()
     })
-    // console.log(rowsData);   
 
+    console.log(rowsData)
     // ----- end of the total row pinned data -----
 
     // Date Picker and setting the properties on date change 
@@ -160,9 +150,9 @@ function CounterReport() {
     const [dates, setDates] = useState([
         {
             startDate : moment('2021-01-01').format('YYYY-MM-DD'),
-            endDate : moment('2021-03-31').format('YYYY-MM-DD'),
+            endDate : moment('2021-12-31').format('YYYY-MM-DD'),
             displayStartDate: moment('2021-01-01').format("MMM DD, YYYY"),
-            displayEndDate: moment('2021-03-31').format("MMM DD, YYYY")
+            displayEndDate: moment('2021-12-31').format("MMM DD, YYYY")
         }
     ])
     const [datePicker, setDatePicker] = useState([
@@ -180,7 +170,7 @@ function CounterReport() {
     }
 
     // different date type fiters eg : checkin date, check out date, etc.
-    const [filterDateType, setFilterDateType] = useState("Date")
+    const [filterDateType, setFilterDateType] = useState("staythrough")
     const onChangeDateFilter = (filterType) => {
         console.log("date filter type", filterType)
         setFilterDateType(filterType)
@@ -204,18 +194,19 @@ function CounterReport() {
     useEffect(() => {
         localStorage.setItem('start_date', dates[0].displayStartDate ? dates[0].displayStartDate : moment().format("MMM DD, YYYY"))
         localStorage.setItem('end_date', dates[0].displayEndDate ? dates[0].displayEndDate : moment().format("MMM DD, YYYY"))
-    }, [dates])
+    }, [dates, filterDateType])
 
-    // calling the api on change of the 
+    // calling the api 
     const calendarData = () => {
-        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=counterReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
-        .then((res) => setRowsData(res.report_data)) 
+        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=posDetailReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}&date_filter_mode=${filterDateType}`)
+        .then((res) => setRowsData(res.report_data))
     }   
 
     useEffect(() => {
         calendarData()
-    }, [dates])
-    // console.log(rowsData)
+    }, [dates, filterDateType])
+
+
 
     // calling the grid api and then exporting the data into the csv format
     const onExportClick = () => {
@@ -251,11 +242,11 @@ function CounterReport() {
         // console.log("filterCount", filterCount)
         gridApi.setQuickFilter(event.target.value)
     }
-    console.log("rData", gridApi)
+
 
     return (
         <div className="agGridWrapr">
-            Counter Report
+            POS Detail Report
             <div className="agGridTableWrapper">
                 <div className="headerOptions">
                     <div className="searchFunctionality">
@@ -306,7 +297,16 @@ function CounterReport() {
                     {/* <div className="dateFilterType">
                         <select className="dateFilterWrapper" onChange={(e) => {onChangeDateFilter(e.target.value)}}>
                             <option value="staythrough" selected>
-                                Date
+                                Stay Through
+                            </option>
+                            <option value="checkin">
+                                Checkin Date
+                            </option>
+                            <option value="checkout">
+                                Checkout Date
+                            </option>
+                            <option value="booking_made_on">
+                                Booking Made Date
                             </option>
                         </select>
                     </div> */}
@@ -328,7 +328,6 @@ function CounterReport() {
                         <AgGridReact
                             className = "agGridTable"
                             rowData={rowsData}
-                            gridOptions = {gridOptions}
                             onGridReady = {onGridReady}
                             columnDefs = {columns}
                             defaultColDef = {defaultColDefs}
@@ -388,17 +387,19 @@ function CounterReport() {
                             frameworkComponents={{
                                 customStatsToolPanel: CustomStatsToolPanel
                             }}
+                            gridOptions = {gridOptions}
+
                         />
                     </div>
                 </div>
             </div>
             <Modal classNames={{ overlay: 'customOverlay', modal: 'customModal'}} open={open} onClose={onCloseModal} center>
                 <div className="pdfExportWrapper">
-                    <PDFExportPanel gridApi={gridApi} columnApi={gridColumnApi} report_Type={reportType} startdate={dates[0].displayStartDate} enddate={dates[0].displayEndDate} />
+                    <PDFExportPanel gridApi={gridApi} columnApi={gridColumnApi} report_Type={reportType} startdate={dates[0].displayStartDate} enddate = {dates[0].displayEndDate} />
                 </div>
             </Modal>
         </div>
     )
 }
 
-export default CounterReport
+export default POSDetailReport

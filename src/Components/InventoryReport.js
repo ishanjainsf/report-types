@@ -20,7 +20,7 @@ import CustomPinnedRowRenderer from "./customPinnedRowRenderer";
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 
-function CounterReport() {
+function InventoryReport() {
 
     // defining variables and setting the state
     const [gridApi, setGridApi] = useState(null);
@@ -34,52 +34,49 @@ function CounterReport() {
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
 
-    const reportType = "Counter Report"
+    const reportType = "Inventory Report"
+
 
     // filter params for the date filter 
     const filterParams = {
-        debounceMs: 500,
-        suppressAndOrCondition: true,
-        comparator: function(filterLocalDateAtMidnight, cellValue) {
-          if (cellValue == null) {
-            return 0;
-          }
-        //   console.log(moment(dateParts).format("DD-MM-YYYY"))
-          var dateParts = moment(cellValue).format("DD-MM-YYYY")
-          const formattedDateParts = dateParts.split('-')
-          var year = Number(formattedDateParts[2]);
-          var month = Number(formattedDateParts[1]) - 1;
-          var day = Number(formattedDateParts[0]);
-          var cellDate = new Date(year, month, day);
-
-          if (cellDate < filterLocalDateAtMidnight) {
-            return -1;
-          } else if (cellDate > filterLocalDateAtMidnight) {
-            return 1;
-          } else {
-            return 0;
-          }
-        },
-}
+            debounceMs: 500,
+            suppressAndOrCondition: true,
+            comparator: function(filterLocalDateAtMidnight, cellValue) {
+              if (cellValue == null) {
+                return 0;
+              }
+              var dateParts = cellValue.split(' ');
+              const modifiedDate = dateParts[0] + " " + dateParts[1] + " " + dateParts[2] + " " + dateParts[3]
+              const formattedDate = moment(`${modifiedDate}`).format("DD-MM-YYYY")
+              const formattedDateParts = formattedDate.split('-')
+              var year = Number(formattedDateParts[2]);
+              var month = Number(formattedDateParts[1]) - 1;
+              var day = Number(formattedDateParts[0]);
+              var cellDate = new Date(year, month, day);
+    
+              if (cellDate < filterLocalDateAtMidnight) {
+                return -1;
+              } else if (cellDate > filterLocalDateAtMidnight) {
+                return 1;
+              } else {
+                return 0;
+              }
+            },
+    }
 
     // column definitions
 
     // defining the column headers, etc. 
     const columns = [
-        {field:"service_date", headerName:"Service Date", filter:"agDateColumnFilter", filterParams:filterParams},
-        {field:"booking_id", headerName:"Booking ID"},
-        {field:"service_description", headerName:"Service Description", enableValue: true,},
-        {field:"amount", headerName:"Amount (₹)", aggFunc:"sum", enableValue:true},
-        {field:"cash_refund", headerName:"Refund (₹)", aggFunc:"sum", enableValue:true, valueFormatter : (params) => {return Number(params.value.toFixed(2))} },
-        {field:"customer_name", headerName:"Customer Name"},
-        {field:"service_amount_desc", headerName:"Service Amount Description"},
-
-        {field:"customer_contact", headerName:"Customer Contact", hide:true},
-        {field:"log_timestamp", headerName:"Log Timestamp",  filter:"agDateColumnFilter", filterParams:filterParams, hide:true},
-        {field:"net_amount", headerName:"Net Amount (₹)", aggFunc:"sum", enableValue:true, valueFormatter : (params) => {return Number(params.value.toFixed(2))}, hide:true},
-        {field:"pos_order_id", headerName:"POS Order ID", hide:true},
-        {field:"service_amount_type", headerName:"Service Amount Type", hide:true},
-        {field:"user_email", headerName:"User Email", hide:true}
+        {field:"date", headerName:"Date", filter:"agDateColumnFilter", filterParams:filterParams, floatingFilterComponentParams: {suppressFilterButton: true}},
+        {field:"total_rooms", headerName:"Total Rooms"},
+        {field:"sold_rooms", headerName:"Sold Rooms", aggFunc:"sum"},
+        {field:"blocked_rooms", headerName:"Blocked Rooms", aggFunc:"sum"},
+        {field:"offline_rooms", headerName:"Offline Rooms", aggFunc:"sum", hide:true},
+        {field:"bookable_rooms", headerName:"Net Rooms", aggFunc:"sum"},
+        {field:"available_rooms", headerName:"Availalble Rooms", aggFunc:"sum"},
+        {field:"available_occupancy", headerName:"Occupancy %", aggFunc:"sum"},
+        {field:"total_occupancy", headerName:"Total Occupancy", aggFunc:"sum", hide: true},
     ]
 
     // default column properties
@@ -101,27 +98,38 @@ function CounterReport() {
     const onGridReady = (params) => {
         setGridApi(params.api)
         setGridColumnApi(params.columnApi);
-        // .then((res) => console.log(console.log(res)))
+        // handleDataRequest("https://beta.stayflexi.com/api/v2/reports/getReportData/?hotel_id=12354&report_type=unifiedBookingReport&start_date=2021-01-01&end_date=2021-12-31&date_filter_mode=checkout")
+        // .then((res) => setRowsData(res.report_data))
+        // // .then((res) => console.log(console.log(res)))
         // .then((res) => params.api.applyTransaction({add:res}))
     }
-
 
     // settings the grid Option
     const gridOptions = {
         pagination: true,
         // generation of the pinned bottom row data
-        onFilterChanged:(params)=>{
+        onFilterChanged:(params)=>{ 
             let result = {
-                service_date:"Total",
-                amount:0,
-                cash_refund:0,
-                net_amount:0
+                date:"Total",
+                available_occupancy : 0,
+                available_rooms: 0,
+                blocked_rooms: 0,
+                offline_rooms: 0,
+                sold_rooms: 0,
+                total_occupancy: 0,
+                blocked_rooms: 0
             }
             setTimeout(()=>{
                 params.api.forEachNodeAfterFilter(i=>{
-                    result.amount += i.data.amount
-                    result.cash_refund += i.data.cash_refund
-                    result.net_amount += i.data.net_amount
+                    result.available_occupancy +=i.data.available_occupancy;
+                    result.available_rooms += i.data.available_rooms;
+                    result.blocked_rooms += i.data.blocked_rooms;
+                    result.offline_rooms += i.data.offline_rooms;
+                    result.sold_rooms += i.data.sold_rooms;
+                    result.total_occupancy += i.data.total_occupancy;
+                    result.blocked_rooms += i.data.blocked_rooms;
+
+
                 });
                 params.api.setPinnedBottomRowData([result]);
             },0)
@@ -132,26 +140,33 @@ function CounterReport() {
     function updatePinnedRowonDateChange(){
         let result = [
             {
-                service_date:"Total",
-                amount:0,
-                cash_refund:0,
-                net_amount:0
+                date:"Total",
+                available_occupancy : 0,
+                available_rooms: 0,
+                blocked_rooms: 0,
+                offline_rooms: 0,
+                sold_rooms: 0,
+                total_occupancy: 0,
+                blocked_rooms: 0
             }
         ]
         rowsData.forEach(data => {
-            result[0].amount += data.amount
-            result[0].cash_refund += data.cash_refund
-            result[0].net_amount += data.net_amount
+            result[0].available_occupancy +=data.available_occupancy;
+            result[0].available_rooms += data.available_rooms;
+            result[0].blocked_rooms += data.blocked_rooms;
+            result[0].offline_rooms += data.offline_rooms;
+            result[0].sold_rooms += data.sold_rooms;
+            result[0].total_occupancy += data.total_occupancy;
+            result[0].blocked_rooms += data.blocked_rooms;
+
         })
         gridApi.setPinnedBottomRowData(result)
-        console.log(result)
-
     }
     useEffect(() => {
         rowsData && updatePinnedRowonDateChange()
     })
-    // console.log(rowsData);   
 
+    console.log(rowsData)
     // ----- end of the total row pinned data -----
 
     // Date Picker and setting the properties on date change 
@@ -180,7 +195,7 @@ function CounterReport() {
     }
 
     // different date type fiters eg : checkin date, check out date, etc.
-    const [filterDateType, setFilterDateType] = useState("Date")
+    const [filterDateType, setFilterDateType] = useState("staythrough")
     const onChangeDateFilter = (filterType) => {
         console.log("date filter type", filterType)
         setFilterDateType(filterType)
@@ -204,18 +219,19 @@ function CounterReport() {
     useEffect(() => {
         localStorage.setItem('start_date', dates[0].displayStartDate ? dates[0].displayStartDate : moment().format("MMM DD, YYYY"))
         localStorage.setItem('end_date', dates[0].displayEndDate ? dates[0].displayEndDate : moment().format("MMM DD, YYYY"))
-    }, [dates])
+    }, [dates, filterDateType])
 
-    // calling the api on change of the 
+    // calling the api 
     const calendarData = () => {
-        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=counterReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
-        .then((res) => setRowsData(res.report_data)) 
+        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=inventoryReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
+        .then((res) => setRowsData(res.report_data))
     }   
 
     useEffect(() => {
         calendarData()
-    }, [dates])
-    // console.log(rowsData)
+    }, [dates, filterDateType])
+
+
 
     // calling the grid api and then exporting the data into the csv format
     const onExportClick = () => {
@@ -251,11 +267,11 @@ function CounterReport() {
         // console.log("filterCount", filterCount)
         gridApi.setQuickFilter(event.target.value)
     }
-    console.log("rData", gridApi)
+
 
     return (
         <div className="agGridWrapr">
-            Counter Report
+            Inventory Report
             <div className="agGridTableWrapper">
                 <div className="headerOptions">
                     <div className="searchFunctionality">
@@ -306,7 +322,16 @@ function CounterReport() {
                     {/* <div className="dateFilterType">
                         <select className="dateFilterWrapper" onChange={(e) => {onChangeDateFilter(e.target.value)}}>
                             <option value="staythrough" selected>
-                                Date
+                                Stay Through
+                            </option>
+                            <option value="checkin">
+                                Checkin Date
+                            </option>
+                            <option value="checkout">
+                                Checkout Date
+                            </option>
+                            <option value="booking_made_on">
+                                Booking Made Date
                             </option>
                         </select>
                     </div> */}
@@ -328,7 +353,6 @@ function CounterReport() {
                         <AgGridReact
                             className = "agGridTable"
                             rowData={rowsData}
-                            gridOptions = {gridOptions}
                             onGridReady = {onGridReady}
                             columnDefs = {columns}
                             defaultColDef = {defaultColDefs}
@@ -388,17 +412,19 @@ function CounterReport() {
                             frameworkComponents={{
                                 customStatsToolPanel: CustomStatsToolPanel
                             }}
+                            gridOptions = {gridOptions}
+
                         />
                     </div>
                 </div>
             </div>
             <Modal classNames={{ overlay: 'customOverlay', modal: 'customModal'}} open={open} onClose={onCloseModal} center>
                 <div className="pdfExportWrapper">
-                    <PDFExportPanel gridApi={gridApi} columnApi={gridColumnApi} report_Type={reportType} startdate={dates[0].displayStartDate} enddate={dates[0].displayEndDate} />
+                    <PDFExportPanel gridApi={gridApi} columnApi={gridColumnApi} report_Type={reportType} startdate={dates[0].displayStartDate} enddate = {dates[0].displayEndDate} />
                 </div>
             </Modal>
         </div>
     )
 }
 
-export default CounterReport
+export default InventoryReport

@@ -67,29 +67,31 @@ function PaymentsReport() {
 
     // defining the column headers, etc. 
     const columns = [
+        {field:"log_timestamp", headerName:"Date"},
         {field:"booking_id", headerName:"SF Booking ID", enableValue: true},
+        {field:"customer_name", headerName:"Customer Name"},
+        {field:"amount", headerName:"Amount (₹)", aggFunc:"sum"},
+        {field:"refund_amount", headerName:"Refund Amount (₹)", aggFunc:"sum"},
+        {field:"payment_status", headerName:"Payment Status", enableValue: true},
+        {field:"payment_type", headerName:"Payment Type", enableValue:true},
+        {field:"payment_issuer", headerName:"Payment Issuer"},
+        {field:"card_last4", headerName:"Payment Card last 4"},
+        {field:"gateway", headerName:"Gateway"},
+
         {field:"hotel_id", headerName:"Hotel ID", enableValue: true, hide:true},
         {field:"idi", headerName:"IDI", enableValue: true, hide:true},
-        {field:"amount", headerName:"Amount", aggFunc:"sum"},
         {field:"booking_source", headerName:"Booking Source", enableValue: true, hide:true},
         {field:"captured_time",headerName:"Captured Time", hide:true},
-        {field:"card_last4", headerName:"Card last 4", hide: true},
         {field:"currency_code", headerName:"Currency Code", enableValue: true},
         {field:"customer_contact", headerName:"Customer Contact", hide:true},
         {field:"customer_email", headerName:"Customer Email", hide:true},
-        {field:"gateway", headerName:"Gateway"},
-        {field:"log_timestamp", headerName:"Log Timestamp"},
-        {field:"net_amount", headerName:"Net Amount",aggFunc:"sum"},
+        {field:"net_amount", headerName:"Net Amount (₹)",aggFunc:"sum"},
         {field:"order_id", headerName:"POS Order ID", hide:true},
-        {field:"payment_issuer", headerName:"Payment Issuer", hide:true},
-        {field:"payment_status", headerName:"Payment Status", enableValue: true},
-        {field:"payment_type", headerName:"Payment Type", enableValue:true},
         {field:"pg_charge_id", headerName:"PG Charge ID", hide:true},
-        {field:"refund_amount", headerName:"Refund Amount", aggFunc:"sum"},
         {field:"settlement_date", headerName:"Settlement Date", hide:true},
         {field:"sf_payment_id", headerName:"Sf Payment Id", hide:true},
-        {field:"token_id", headerName:"Token ID", enableValue: true},
-        {field:"transfer_amount", headerName:"Transfer Amount", aggFunc:"sum", hide:true},
+        {field:"token_id", headerName:"Token ID", enableValue: true, hide:true},
+        {field:"transfer_amount", headerName:"Transfer Amount (₹)", aggFunc:"sum", hide:true},
         {field:"user_email", headerName:"User Email", hide:true}
     ]
 
@@ -215,7 +217,7 @@ function PaymentsReport() {
 
     // calling the api 
     const calendarData = () => {
-        handleDataRequest(`https://beta.stayflexi.com/api/v2/reports/getReportData/?hotel_id=12354&report_type=paymentsReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
+        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=paymentsReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
         .then((res) => setRowsData(res.report_data))
         // .then((res) => console.log(res))
     }   

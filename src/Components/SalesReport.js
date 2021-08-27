@@ -61,31 +61,39 @@ function SalesReport() {
             },
     }
 
+    // currency formatter
+    function currencyFormatter(data, sign){
+        var sansDesc = data.toFixed(2);
+        return sign + `${data}`
+    }
+
     // column definitions
 
     // defining the column headers, etc. 
     const columns = [
         {field:"metric", headerName:"Date", filter:'agDateColumnFilter', filterParams:filterParams, floatingFilterComponentParams: {suppressFilterButton: true} },
-        {field:"adr", headerName:"ADR", aggFunc:"sum", enableValue: true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"c_res_amount", headerName:"Cancellations Revenue", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
+        {field:"occupancy", headerName:"Occupany %", aggFunc:"sum", enableValue:true, valueFormatter : params => params.value + "%", filter:"agNumberColumnFilter" },
+        {field:"adr", headerName:"ADR (₹)", aggFunc:"sum", enableValue: true, valueFormatter : params => currencyFormatter(params.data.adr, '₹')},
+        {field:"revpar", headerName:"RevPAR (₹)", aggFunc:"sum", enableValue:true,valueFormatter : params => currencyFormatter(params.data.revpar, '₹') },
+        {field:"net_rooms", headerName:"Net Rooms Sold", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
+        {field:"nc_res_amount", headerName:"NC Res Revenue (₹)", aggFunc:"sum", enableValue:true, valueFormatter : params => currencyFormatter(params.data.nc_res_amount, '₹') },
+        {field:"s_amount", headerName:"Net Services Amount (₹)", aggFunc:"sum", enableValue:true, valueFormatter : params => currencyFormatter(params.data.s_amount, '₹') },
+        {field:"total_revenue", headerName:"Net Total Revenue (₹)", aggFunc:"sum", enableValue:true, valueFormatter : params => currencyFormatter(params.data.total_revenue, '₹') },
+        {field:"net_tax", headerName:"Net Total Tax (₹)", aggFunc:"sum", enableValue:true, valueFormatter : params => currencyFormatter(params.data.net_tax, '₹') },
+        {field:"payment_made", headerName:"Payment Made (₹)", aggFunc:"sum", enableValue:true, valueFormatter : params => currencyFormatter(params.data.payment_made, '₹') },
+        {field:"c_res_amount", headerName:"Cancellations Revenue (₹)", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.c_res_amount, '₹') },
         {field:"c_res_count", headerName:"Cancellations", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"c_res_tax", headerName:"Cancellations Revenue Tax", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"nc_res_amount", headerName:"NC Res Revenue", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"nc_res_count", headerName:"NC Res Count", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"net_rooms", headerName:"Net Rooms", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"net_tax", headerName:"Net Total Tax", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"occupancy", headerName:"Occupany %", aggFunc:"sum", enableValue:true, },
+        {field:"c_res_tax", headerName:"Cancellations Revenue Tax (₹)", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.c_res_tax, '₹') },
+        {field:"nc_res_count", headerName:"NC Res Count", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))}, hide:true },
         {field:"ooo_occupancy", headerName:"Out of order occupancy", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"ooo_revpar", headerName:"Out of order RevPar"},
-        {field:"paymnt_made", headerName:"Payment Made", aggFunc:"sum", enableValue:true },
-        {field:"revpar", headerName:"RevPAR", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"s_amount", headerName:"Net Services Amount", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"s_tax", headerName:"Net Services Tax", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"taxable_amount", headerName:"Taxable Revenue", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"texmpt_amount", headerName:"Tax Exempt Amount", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
-        {field:"total_revenue", headerName:"Net Total Revenue", aggFunc:"sum", enableValue:true, valueFormatter : params => {return Number(params.value.toFixed(2))} },
+        {field:"ooo_revpar", headerName:"Out of order RevPar (₹)", hide:true, valueFormatter : params => currencyFormatter(params.data.ooo_revpar, '₹')},
+        {field:"s_tax", headerName:"Net Services Tax (₹)", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.s_tax, '₹') },
+        {field:"taxable_amount", headerName:"Taxable Revenue (₹)", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.taxable_amount, '₹') },
+        {field:"texmpt_amount", headerName:"Tax Exempt Amount (₹)", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.texmpt_amount, '₹') },
         {field:"total_rooms", headerName:"Total Rooms", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => {return Number(params.value.toFixed(2))} }
     ]
+
+    // ₹
 
     // default column properties
     const defaultColDefs = {
@@ -135,7 +143,8 @@ function SalesReport() {
                 taxable_amount:0,
                 texempt_amount:0,
                 total_revenue:0,
-                total_rooms:0
+                total_rooms:0,
+                occupancy:0,
             }
             setTimeout(()=>{
                 params.api.forEachNodeAfterFilter(i=>{
@@ -155,6 +164,8 @@ function SalesReport() {
                     result.texempt_amount += i.data.texempt_amount
                     result.total_revenue += i.data.total_revenue
                     result.total_rooms += i.data.total_rooms
+                    result.occupancy += i.data.occupancy
+
                 });
                 params.api.setPinnedBottomRowData([result]);
             },0)
@@ -181,7 +192,8 @@ function SalesReport() {
                 taxable_amount:0,
                 texempt_amount:0,
                 total_revenue:0,
-                total_rooms:0
+                total_rooms:0,
+                occupancy: 0 
             }
         ]
         rowsData.forEach(data => {
@@ -201,6 +213,8 @@ function SalesReport() {
            result[0].texempt_amount += data.texempt_amount
            result[0].total_revenue += data.total_revenue
            result[0].total_rooms += data.total_rooms
+           result[0].occupancy += data.occupancy
+           
         })
         gridApi.setPinnedBottomRowData(result)
     }
@@ -266,7 +280,7 @@ function SalesReport() {
 
     // calling the api on change of the 
     const calendarData = () => {
-        handleDataRequest(`https://beta.stayflexi.com/api/v2/reports/getReportData/?hotel_id=12354&report_type=salesReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
+        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=salesReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}`)
         .then((res) => setRowsData(res.report_data))
     }   
 
@@ -395,7 +409,7 @@ function SalesReport() {
                             rowMultiSelectWithClick = {true}
                             paginationPageSize = {10}
                             alwaysShowBothConditions = {true}
-                            groupIncludeTotalFooter = {true}
+                            // groupIncludeTotalFooter = {true}
                             sideBar = {{
                                 toolPanels:[
                                     {

@@ -1,0 +1,52 @@
+.flashManagerReportWrapper{
+    font-family:var(--poppins);
+    margin: 15px;
+    .flashManagerHeader{
+        font-size: 25px;
+        margin-top: 25px;
+        font-weight: bold;
+        margin-bottom: 45px;
+    }
+    .reportGeneralInfo{
+        display: grid;
+        grid-template-columns: auto auto;
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 40px;
+        .leftHeading{
+            display: flex;
+            flex-direction: column;
+        }
+        .rightHeading{
+            display: flex;
+            flex-direction: column;
+            margin-right: 50px;
+            text-align: right;
+        }
+    }
+    .reportHeading{
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+    .reportSummary{
+        margin-top: 25px;
+        .reportHeaders{
+            border: none;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            .reportTable{
+                display: flex;
+                flex-direction: column;
+                .headers{
+                    display: grid;
+                    grid-template-columns: auto auto auto auto;
+                }
+                .reportData{
+                    display: grid;
+                    grid-template-columns: auto auto auto auto;
+                }
+            }
+        }
+    }
+}

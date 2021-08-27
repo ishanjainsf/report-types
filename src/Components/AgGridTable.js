@@ -63,6 +63,12 @@ function AgGridTable() {
             },
     }
 
+    // Currency formatter
+    function currencyFormatter(data, symbol){
+        var formattedData = data.toFixed(2)
+        return symbol + " " + `${formattedData}`
+    }
+
     // column definitions
 
     // defining the column headers, etc. 
@@ -73,83 +79,81 @@ function AgGridTable() {
         headerCheckboxSelection: true,
         },
         {field:"customer_name", headerName:"Customer Name",},
+        {   field:"checkin", 
+            headerName:"Check In", 
+            filter:'agDateColumnFilter', 
+            floatingFilterComponentParams: {
+            suppressFilterButton: true,
+            },
+        filterParams: filterParams
+        },
+        {   field:"checkout", headerName:"Check Out", filter:'agDateColumnFilter', 
+            floatingFilterComponentParams: {
+            suppressFilterButton: true,
+            },
+            filterParams: filterParams
+        },
+        {field:"source", headerName:"Source"},
+        {field:"identification", headerName:"Customer Identification", hide:true},
+
         {field:"booking_email", headerName:"Booking Email", hide:true},
         {field:"email", headerName:"User Email", hide:true},
         {field:"actual_checkin", headerName:"Actual Check In", filter:'agDateColumnFilter', filterParams: filterParams, hide:true},
         {field:"actual_checkout", headerName:"Actual Check Out", filter:'agDateColumnFilter', filterParams: filterParams, hide:true},
-        {field:"checkin", 
-        headerName:"Check In", 
-        filter:'agDateColumnFilter', 
-        floatingFilterComponentParams: {
-          suppressFilterButton: true,
-        },
-        filterParams: filterParams
-        },
-        {field:"checkout", headerName:"Check Out", filter:'agDateColumnFilter', 
-        floatingFilterComponentParams: {
-          suppressFilterButton: true,
-        },
-        filterParams: filterParams
-        },
-        {
-            field: "booking_made_on", headerName: "Booking Made On", filter:'agDateColumnFilter', filterParams: filterParams
-        },
-        {field:"source", headerName:"Source"},
-        {field:"status", 
-        headerName:"Booking Status"},
-        // cellStyle:(gridApi)=>(gridApi.data.status === "CONFIRMED" ? {color:"green"} : {color:"red"})},
-        // cellClass:(gridApi)=>(gridApi.bStatus === "Confirmed" ? "ifConfirmed" : "notConfirmed")},
-        {field:"room_ids", headerName:"Room ID(s)", hide:true},
+        {field:"status", headerName:"Booking Status"},
         {field:"rooms", headerName:"Rooms"},
         {field:"roomtypes", headerName:"Room Types", enableValue:true, rowGroup: false},
+        {
+            field:"total_amount_with_services", headerName:"Total Amount (₹)", enableValue: true, aggFunc:"sum", valueFormatter : params => currencyFormatter(params.data.total_amount_with_services, '₹')   
+        },
+        {
+            field:"payment_made", headerName:"Payment Made (₹)", enableValue: true, aggFunc:"sum", valueFormatter : params => currencyFormatter(params.data.payment_made, '₹')
+        },
         {field:"rate_plans", headerName:"Rate Plans", hide:true},
+
+        {
+            field: "booking_made_on", headerName: "Booking Made On", filter:'agDateColumnFilter', filterParams: filterParams, hide:true
+        },
+        {field:"room_ids", headerName:"Room ID(s)", hide:true},
         {field:"pax", headerName:"PAX", hide:true},
         {field:"customer_phone", headerName:"Customer Phone", hide:true},
-        {field:"identification", headerName:"Customer Identification", hide:true},
         {field:"customer_city", headerName:"Customer City", hide:true},
         {field:"customer_zipcode", headerName:"Customer Zipcode", hide:true},
         {field:"customer_state", headerName:"Customer State", hide:true},
         {field:"customer_country", headerName:"Customer Country", hide:true},
         {field:"customer_invoice_id", headerName:"Customer Invoice Id", hide:true},
-        {field:"booking_amount", headerName:"Booking Amount", enableValue:true, aggFunc:"sum", hide:true},
-        {field:"service_amount", headerName:"Service Amount", enableValue:true, aggFunc:"sum", hide:true},
-        {
-            field:"total_amount_with_services", headerName:"Total Amount", enableValue: true, aggFunc:"sum",
-            valueFormatter : (params) => {
-            return Number(params.value.toFixed(2))
-        }
-        },
-        {
-            field:"payment_made", headerName:"Payment Made", enableValue: true, aggFunc:"sum",
-            valueFormatter : (params) => {return params.value.toFixed(2)}
-        },
+        {field:"booking_amount", headerName:"Booking Amount (₹)", enableValue:true, aggFunc:"sum", valueFormatter : params => currencyFormatter(params.data.booking_amount, '₹'), hide:true},
+        {field:"service_amount", headerName:"Service Amount (₹)", enableValue:true, aggFunc:"sum", hide:true, valueFormatter : params => currencyFormatter(params.data.service_amount, '₹')},
+
+
+
         {
             field:"external_payment", headerName:"External Source Payment", aggFunc:"sum", enableValue:true, hide: true,
-            valueFormatter : (params) => {return params.value.toFixed(2)}
+            valueFormatter : params => currencyFormatter(params.data.external_payment, '₹')
         },
         {
             field:"external_payment_card", headerName:"External Card Payment", aggFunc:"sum", enableValue:true, hide:true
         },
         {
-            field:"refund", headerName:"Refund", aggFunc:"sum", enableValue:true, hide:true
+            field:"refund", headerName:"Refund", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.refund, '₹')
         },
         {
             field:"balance_due", headerName:"Balance Due", aggFunc:"sum",
             valueGetter : params => {
-                return Number(((params.data.total_amount_with_services) - (params.data.payment_made)).toFixed(2))
-            }
+                return '₹' + Number(((params.data.total_amount_with_services) - (params.data.payment_made)).toFixed(2))
+            },
+            hide: true
         },
         {
             field:"offline_payment", headerName:"Offline Payment", aggFunc:"sum", hide:true,
-            valueFormatter : (params) => {return params.value.toFixed(2)}
+            valueFormatter : params => currencyFormatter(params.data.offline_payment, '₹')
         },
-        {field:"ota_commission", headerName:"OTA Commission", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : (params) => {return params.value.toFixed(2)} },
-        {field:"ota_tax", headerName:"OTA Tax", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : (params) => {return params.value.toFixed(2)}},
-        {field:"ota_net_amount", headerName:"OTA Net Amount", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : (params) => {return params.value.toFixed(2)}},
+        {field:"ota_commission", headerName:"OTA Commission", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.ota_commission, '₹') },
+        {field:"ota_tax", headerName:"OTA Tax", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.ota_tax, '₹') },
+        {field:"ota_net_amount", headerName:"OTA Net Amount", aggFunc:"sum", enableValue:true, hide:true, valueFormatter : params => currencyFormatter(params.data.ota_net_amount, '₹') },
         {field:"special_requests", headerName:"Special Requests", hide:true},
         {
-            field:"online_payment", headerName:"Online Payment", aggFunc:"sum", hide:true,
-            valueFormatter : (params) => {return params.value.toFixed(2)}
+            field:"online_payment", headerName:"Online Payment", aggFunc:"sum", hide:true, valueFormatter : params => currencyFormatter(params.data.online_payment, '₹')
         },
     ]
 
@@ -192,7 +196,9 @@ function AgGridTable() {
                 services_amount:0,
                 ota_net_amount:0,
                 external_payment:0,
-                external_payment_card:0
+                external_payment_card:0,
+                rooms: 0,
+                online_payment: 0,
             }
             setTimeout(()=>{
                 params.api.forEachNodeAfterFilter(i=>{
@@ -205,6 +211,9 @@ function AgGridTable() {
                     result.ota_net_amount +=i.data.ota_net_amount;
                     result.external_payment +=i.data.external_payment;
                     result.external_payment_card +=i.data.external_payment_card;
+                    result.rooms +=i.data.rooms;
+                    result.online_payment +=i.data.online_payment;
+
                 });
                 params.api.setPinnedBottomRowData([result]);
             },0)
@@ -224,7 +233,9 @@ function AgGridTable() {
                 services_amount:0,
                 ota_net_amount:0,
                 external_payment:0,
-                external_payment_card:0
+                external_payment_card:0,
+                rooms:0,
+                online_payment: 0,
             }
         ]
         rowsData.forEach(data => {
@@ -237,6 +248,10 @@ function AgGridTable() {
            result[0].ota_net_amount += data.ota_net_amount
            result[0].external_payment += data.external_payment
            result[0].external_payment_card += data.external_payment_card
+           result[0].rooms += data.rooms
+           result[0].online_payment += data.online_payment;
+
+
         })
         gridApi.setPinnedBottomRowData(result)
     }
@@ -301,7 +316,7 @@ function AgGridTable() {
 
     // calling the api 
     const calendarData = () => {
-        handleDataRequest(`https://beta.stayflexi.com/api/v2/reports/getReportData/?hotel_id=12354&report_type=unifiedBookingReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}&date_filter_mode=${filterDateType}`)
+        handleDataRequest(`reports/getReportData/?hotel_id=12354&report_type=unifiedBookingReport&start_date=${dates[0].startDate}&end_date=${dates[0].endDate}&date_filter_mode=${filterDateType}`)
         .then((res) => setRowsData(res.report_data))
     }   
 
@@ -349,7 +364,7 @@ function AgGridTable() {
 
     return (
         <div className="agGridWrapr">
-            Ag Grid Table
+            Master Report
             <div className="agGridTableWrapper">
                 <div className="headerOptions">
                     <div className="searchFunctionality">
@@ -440,7 +455,7 @@ function AgGridTable() {
                             rowMultiSelectWithClick = {true}
                             paginationPageSize = {10}
                             alwaysShowBothConditions = {true}
-                            groupIncludeTotalFooter = {true}
+                            // groupIncludeTotalFooter = {true}
                             sideBar = {{
                                 toolPanels:[
                                     {

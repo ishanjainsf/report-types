@@ -18,6 +18,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.0.0",
     "date-fns": "^2.23.0",
+    "dotenv": "^10.0.0",
     "flatpickr": "^4.6.9",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.15",
